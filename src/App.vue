@@ -30,7 +30,7 @@
             <li><a class="dropdown-item" href="/show_customer">Show customer</a></li>
             <li><a class="dropdown-item" href="/show_employees">Show Employees</a></li>
             <li><hr class="dropdown-divider"></li>
-            <li><a class="dropdown-item" href="#">Logout</a></li>
+            <li><a class="dropdown-item" href="/add_employee">Add_Employee</a></li>
           </ul>
         </li>
         <li class="nav-item dropdown">

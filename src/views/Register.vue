@@ -1,32 +1,106 @@
 <template>
-    <div class="container my-5">
-        <div class="d-flex justify-content-center align-items-center vh-100">
-        <div class="card shadow p-4" style="width: 500px; border-radius: 15px;">
-            <h3 class="text-center mb-4">Register</h3>
-            <form>
-                <div class="mb-3">
-                    <label for="username" class="form-label">FirstName</label>
-                    <input type="text" class="form-control" id="firstname" placeholder="FirstName" required>
-                </div>
-                <div class="mb-3">
-                    <label for="password" class="form-label">LastName</label>
-                    <input type="password" class="form-control" id="lastname" placeholder="LastName" required>
-                </div>
-                <div class="mb-3">
-                    <label for="password" class="form-label">Phone Number</label>
-                    <input type="password" class="form-control" id="phone number" placeholder="Phone Number" required>
-                </div>
-                <div class="mb-3">
-                    <label for="password" class="form-label">Username</label>
-                    <input type="password" class="form-control" id="username" placeholder="Username" required>
-                </div>
-                <div class="mb-3">
-                    <label for="password" class="form-label">Password</label>
-                    <input type="password" class="form-control" id="password" placeholder="Enter password" required>
-                </div>
-                <button type="submit" class="btn btn-dark w-100">สมัครสมาชิก</button>
-            </form>
+  <div class="container my-5">
+    <div class="d-flex justify-content-center align-items-center vh-100">
+      <div class="card shadow p-4" style="width: 400px; border-radius: 15px;">
+        
+        <h3 class="text-center mb-4">Register</h3>
+
+        <form @submit.prevent="addCustomer">
+
+          <div class="mb-3">
+            <label class="form-label">ชื่อ</label>
+            <input type="text" class="form-control"
+              v-model="form.firstName" placeholder="ชื่อ" required>
+          </div>
+
+          <div class="mb-3">
+            <label class="form-label">นามสกุล</label>
+            <input type="text" class="form-control"
+              v-model="form.lastName" placeholder="นามสกุล" required>
+          </div>
+
+          <div class="mb-3">
+            <label class="form-label">เบอร์โทรศัพท์</label>
+            <input type="text" class="form-control"
+              v-model="form.phone" placeholder="เบอร์โทรศัพท์" required>
+          </div>
+
+          <div class="mb-3">
+            <label class="form-label">Username</label>
+            <input type="text" class="form-control"
+              v-model="form.username" placeholder="username" required>
+          </div>
+
+          <div class="mb-3">
+            <label class="form-label">Password</label>
+            <input type="password" class="form-control"
+              v-model="form.password" placeholder="password" required>
+          </div>
+
+          <button type="submit" class="btn btn-primary w-100">
+            บันทึก
+          </button>
+
+        </form>
+
+        <!-- แสดงผล -->
+        <div v-if="message" class="alert mt-3"
+             :class="status === 'success' ? 'alert-success' : 'alert-danger'">
+          {{ message }}
         </div>
+
+      </div>
     </div>
-</div>
+  </div>
 </template>
+
+<script>
+export default {
+  data() {
+    return {
+      form: {
+        firstName: '',
+        lastName: '',
+        phone: '',
+        username: '',
+        password: ''
+      },
+      message: '',
+      status: ''
+    }
+  },
+  methods: {
+    async addCustomer() {
+      try {
+        const res = await fetch('http://localhost/project-vue-68709054/php.api/add_customer.php', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify(this.form)
+        });
+
+        const result = await res.json();
+
+        this.message = result.message;
+        this.status = result.status;
+
+        // เคลียร์ฟอร์ม
+        if (result.status === 'success') {
+          this.form = {
+            firstName: '',
+            lastName: '',
+            phone: '',
+            username: '',
+            password: ''
+          };
+        }
+
+      } catch (error) {
+        this.message = 'เชื่อมต่อ API ไม่สำเร็จ';
+        this.status = 'error';
+      }
+    }
+  }
+}
+</script>
